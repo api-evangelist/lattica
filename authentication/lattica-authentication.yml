@@ -1,0 +1,93 @@
+generated: '2026-07-19'
+method: searched
+source: >-
+  https://platformdocs.lattica.ai/architecture-overview/query-client.md,
+  https://platformdocs.lattica.ai/how-to-guides/access-control/how-to-create-user-access-token.md,
+  https://platformdocs.lattica.ai/how-to-guides/secure-query-processing/how-to-execute-query.md;
+  transport detail confirmed in the first-party lattica-common 0.8.2 wheel
+  (lattica_common/app_api.py sets Authorization: Bearer <token>).
+description: >-
+  Lattica does not publish an OpenAPI definition, so this profile was read off
+  the platform documentation and the official Python SDK rather than derived
+  from securitySchemes. There is no OAuth 2.0 and no OpenID Connect: the whole
+  platform authenticates with bearer tokens, but with TWO distinct token classes
+  that are easy to conflate — an organization-level management license and a
+  per-user, per-workload query token.
+base_url: https://api.lattica.ai
+oauth2: false
+oidc: false
+mutual_tls: false
+
+schemes:
+  - id: management_license
+    type: http
+    scheme: bearer
+    in: header
+    header: Authorization
+    format: 'Authorization: Bearer <token>'
+    audience: Organization administrator
+    issued_by: Lattica web console (https://console.lattica.ai/)
+    grants: >-
+      Full management surface — create/activate/deactivate workloads (models),
+      generate and assign user access tokens, start/stop compute workers, read
+      account info, credits, and transaction history.
+    sdk_usage: 'LatticaManagement("your_license_from_lattica_console")'
+    docs: https://platformdocs.lattica.ai/how-to-guides/access-control/how-to-create-user-access-token.md
+    expiration: Not documented.
+    rotation: Not documented.
+
+  - id: user_access_token
+    type: http
+    scheme: bearer
+    in: header
+    header: Authorization
+    format: 'Authorization: Bearer <token>'
+    token_format: JWT
+    audience: End user querying a workload
+    issued_by: >-
+      The workload service provider, via the web console (Token Management) or
+      the Python management SDK (generate_query_token).
+    scoping: >-
+      Bound to ONE user and ONE workload. A token may be created unassigned and
+      linked to a workload later; an end user cannot use an unassigned token.
+    grants: >-
+      Submit encrypted queries to the assigned workload, upload an evaluation
+      key, and retrieve the encrypted result. No management capability.
+    expiration: 30 days — tokens must be renewed on expiry.
+    retrievability: >-
+      Shown once at creation and NOT stored by the platform. It cannot be
+      retrieved later; a lost token must be replaced.
+    revocation: >-
+      Tokens can be updated, reassigned, deleted, or set active/cancelled from
+      the console or the management SDK
+      (update_token_info, assign_token_to_model, unassign_token_from_model,
+      delete_token).
+    docs: https://platformdocs.lattica.ai/architecture-overview/query-client.md
+
+client_side_cryptography:
+  note: >-
+    Distinct from authentication, but load-bearing for the trust model: the
+    bearer token authorizes the call, it does not grant access to plaintext.
+  secret_key: >-
+    Generated and held by the end user in the Query Client. Never sent to
+    Lattica. Encrypts the query input and decrypts the returned output.
+  evaluation_key: >-
+    Public key uploaded to the platform to accelerate homomorphic computation.
+    Does not permit decryption.
+  implication: >-
+    A compromised user access token allows an attacker to spend the token
+    holder's query budget against a workload, but not to read prior plaintext,
+    which never leaves the client.
+
+not_supported:
+  - oauth2_authorization_code
+  - oauth2_client_credentials
+  - openid_connect
+  - api_key_query_parameter
+  - mutual_tls
+  - basic_auth
+scopes:
+  model: >-
+    No OAuth scope system. Authorization is coarse and structural — the token
+    class determines the capability set, and the token-to-workload assignment
+    determines the resource. No scopes/ artifact is produced for this provider.
