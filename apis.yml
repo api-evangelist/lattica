@@ -1,23 +1,132 @@
 aid: lattica
 name: Lattica
-description: 'Lattica is a company surfaced as a portfolio company of polychain and added to the API Evangelist
-  network as a stub for enrichment. Sector: privacy. This profile is a lead awaiting the enrichment pipeline.'
+description: 'LatticaAI is an Israeli privacy-technology company building Fully Homomorphic
+  Encryption (FHE) as a service, letting AI inference and database queries run on encrypted
+  data at cloud scale with zero plaintext exposure. Lattica builds the full stack — the
+  cryptography, a compiler that turns models into homomorphic-ready pipelines, and a
+  GPU-accelerated FHE runtime called the Encrypted Execution Layer. Service providers
+  deploy models and vector databases as workloads; end users query them through a Query
+  Client that encrypts input on-device and decrypts results locally, so the server only
+  ever sees ciphertext. HEAL (Homomorphic Encryption Abstraction Layer) bridges the FHE
+  software stack to acceleration hardware.'
+accessModel:
+  pricing: unknown
+  onboarding: self-serve
+  trial: false
+  try_now: false
+  public: false
+  label: Self-serve signup
+  confidence: medium
+  source:
+  - authentication
+  generated: '2026-07-22'
+  method: derived
+image: https://www.lattica.ai/assets/logo/White%20logo%20-%20no%20background.svg
 url: https://raw.githubusercontent.com/api-evangelist/lattica/refs/heads/main/apis.yml
 x-type: company
 x-source: vc-portfolio
 x-backed-by:
 - polychain
-x-tier: stub
-x-tier-reason: portfolio-lead
 specificationVersion: '0.20'
 created: '2026-07-17'
-modified: '2026-07-17'
+modified: '2026-07-19'
 tags:
 - Company
 - Privacy
-apis: []
+- Fully Homomorphic Encryption
+- Encryption
+- Confidential Computing
+- Artificial Intelligence
+- Machine Learning
+- Inference
+- Vector Search
+- Security
+apis:
+- aid: lattica:platform
+  name: Lattica Platform API
+  description: 'The LatticaAI platform API for deploying and operating encrypted workloads.
+    An RPC-style HTTPS surface rooted at https://api.lattica.ai/api/, authenticated with
+    a Bearer token, covering account and finance operations, model (workload) lifecycle,
+    user access token management, worker/compute-resource control, and encrypted query
+    execution. Consumed through the first-party Python (lattica-query, lattica-management)
+    and TypeScript (@lattica-ai/query) client SDKs; Lattica does not publish an OpenAPI
+    definition for the surface.'
+  humanURL: https://platformdocs.lattica.ai/
+  baseURL: https://api.lattica.ai
+  tags:
+  - Fully Homomorphic Encryption
+  - Encrypted Compute
+  - Inference
+  - Workload Management
+  properties:
+  - type: Documentation
+    url: https://platformdocs.lattica.ai/
+  - type: GettingStarted
+    url: https://platformdocs.lattica.ai/how-to-guides/client-installation.md
+  - type: Authentication
+    url: authentication/lattica-authentication.yml
+  - type: Conventions
+    url: conventions/lattica-conventions.yml
+  - type: MCPServer
+    url: mcp/lattica-mcp.yml
+common:
+- type: DomainSecurity
+  url: security/lattica-domain-security.yml
+- type: Website
+  url: https://www.lattica.ai/
+- type: DeveloperPortal
+  url: https://www.lattica.ai/documentation.html
+- type: Documentation
+  url: https://platformdocs.lattica.ai/
+- type: GettingStarted
+  url: https://platformdocs.lattica.ai/how-to-guides/client-installation.md
+- type: SignUp
+  url: https://console.lattica.ai/
+- type: Support
+  url: https://www.lattica.ai/contact.html
+- type: GitHubOrganization
+  url: https://github.com/Lattica-ai
+- type: Pricing
+  url: https://platformdocs.lattica.ai/conceptual-guide/pricing.md
+- type: TermsOfService
+  url: https://www.lattica.ai/terms-of-use.html
+- type: PrivacyPolicy
+  url: https://www.lattica.ai/privacy-policy.html
+- type: Blog
+  url: https://www.lattica.ai/news.html
+- type: WhitePaper
+  url: https://www.lattica.ai/assets/docs/lattica-fhe-technical-whitepaper.pdf
+- type: LinkedIn
+  url: https://www.linkedin.com/company/lattica/
+- type: Twitter
+  url: https://x.com/latticaai
+- type: Packages
+  url: packages/lattica-packages.yml
+- type: SDKs
+  url: packages/lattica-packages.yml
+- type: LLMsTxt
+  url: llms/lattica-llms.txt
+- type: WellKnown
+  url: well-known/lattica-well-known.yml
+- type: Conventions
+  url: conventions/lattica-conventions.yml
+- type: Authentication
+  url: authentication/lattica-authentication.yml
+- type: Lifecycle
+  url: lifecycle/lattica-lifecycle.yml
+- type: Conformance
+  url: conformance/lattica-conformance.yml
+- type: MCPServer
+  url: mcp/lattica-mcp.yml
+- type: DataModel
+  url: data-model/lattica-data-model.yml
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
+x-enrichment:
+  date: '2026-07-19'
+  status: backfilled
+  pass: local-v1
+  note: backfilled from .gitignore signal + verified work evidence
