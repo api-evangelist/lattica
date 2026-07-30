@@ -1,0 +1,105 @@
+generated: '2026-07-19'
+method: searched
+source: >-
+  https://platformdocs.lattica.ai/ (complete 48-entry llms.txt index),
+  https://www.lattica.ai/documentation.html, https://www.lattica.ai/news.html,
+  https://www.lattica.ai/terms-of-use.html, plus version-negotiation behavior in
+  the first-party lattica-common 0.8.2 wheel.
+description: >-
+  Lattica's API lifecycle commitments are, as of this pass, essentially
+  unpublished. This artifact records that absence deliberately and with the
+  evidence behind it, because the raw HTTP status codes on Lattica's hosts are
+  actively misleading and a future round could easily record false positives.
+  The company is early — a developer waitlist rather than open self-serve
+  signup, case-by-case pricing — and the operational surface reflects that.
+
+versioning:
+  scheme: client-library versioning
+  mechanism: >-
+    No API version in the URL path, no version request header, and no dated
+    version pinning. Instead the SDK reports client_module/client_version in the
+    request body and the backend may reject an outdated client with a
+    min_version hint, forcing an SDK upgrade.
+  docs_label: 'Platform Docs · v2.4'
+  policy_published: false
+  notes: >-
+    Because compatibility is negotiated by minimum SDK version, a backend change
+    can require consumers to upgrade their client. There is no published support
+    window for older SDK versions.
+
+deprecation:
+  policy_url: null
+  policy_published: false
+  sunset_header: false
+  deprecation_header: false
+  rfc8594: false
+  evidence: >-
+    No deprecation or sunset policy appears in the docs index, and no
+    RFC 8594 Sunset/Deprecation header handling exists in the SDK. No
+    `type: Deprecation` pointer is emitted in apis.yml because there is no
+    policy to point at.
+  deprecated_operations: []
+
+changelog:
+  published: false
+  evidence: >-
+    /changelog, /release-notes and /releases on platformdocs.lattica.ai all
+    return HTTP 200 but serve a "Page Not Found" body — the host soft-404s on
+    unknown .md paths. A control request for /nonsense-xyz123.md also returned
+    200. None of these is a changelog. Release history is visible only as PyPI
+    and npm version history for the client SDKs.
+  proxy_signal:
+    - registry: pypi
+      package: lattica-query
+      latest: '1.5.0'
+      releases: 20
+      last_upload: '2026-05-12'
+    - registry: pypi
+      package: lattica-management
+      latest: '0.2.1'
+    - registry: pypi
+      package: lattica-common
+      latest: '0.8.2'
+    - registry: npm
+      package: "@lattica-ai/query"
+      latest: '2.1.0'
+      last_modified: '2025-06-10'
+  note: >-
+    No ChangeLog pointer is wired in apis.yml — registry version history is a
+    proxy signal, not a published changelog.
+
+status_page:
+  published: false
+  url: null
+  evidence: >-
+    status.lattica.ai does not resolve. lattica.statuspage.io returns HTTP 200
+    but serves Atlassian's Statuspage MARKETING page, not a Lattica status page
+    — Statuspage answers 200 for unclaimed subdomains. Same for
+    lattica.instatus.com. No `type: StatusPage` pointer is emitted.
+
+sla:
+  url: null
+  public_uptime_target: null
+  notes: >-
+    No uptime commitment is published. The Terms of Use are the only operational
+    legal document (https://www.lattica.ai/terms-of-use.html). Availability is
+    additionally shaped by the fact that customers start and stop their own
+    compute workers.
+
+availability_model:
+  note: >-
+    Unusual and worth flagging for consumers: workloads only serve queries while
+    the owning organization has a running worker AND a positive credit balance.
+    Availability is therefore partly a customer-side responsibility, not purely
+    a provider SLA question.
+  cross_link: conventions/lattica-conventions.yml
+
+access_stage:
+  signup: waitlist
+  evidence: >-
+    Both the platform and documentation pages present "Join developer waitlist"
+    rather than open signup; the web console at https://console.lattica.ai/ is
+    reachable but gated. Pricing is case-by-case via hello@lattica.ai.
+  implication: >-
+    Treat this provider as pre-general-availability. Lifecycle guarantees a
+    consumer would expect from a GA API are not yet in place.

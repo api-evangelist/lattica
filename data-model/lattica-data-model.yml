@@ -1,0 +1,171 @@
+generated: '2026-07-19'
+method: derived
+source: >-
+  Derived from the action paths and public method signatures in the first-party
+  SDK wheels (lattica-management 0.2.1, lattica-query 1.5.0, lattica-common
+  0.8.2) plus the platform workflow docs at
+  https://platformdocs.lattica.ai/platform-workflows.md. No OpenAPI definition
+  is published, so entities and relationships were inferred from the operations
+  that act on them; field-level schemas are NOT claimed.
+description: >-
+  The entity graph of the Lattica platform. Five entities carry the model:
+  an Account owns Workloads and Workers, issues Tokens, and draws down Credits;
+  a Token binds one end user to one Workload; a Query executes against a
+  Workload on a Worker. Terminology note — the docs call the deployed unit a
+  "workload", while the API and SDK still call it a "model" (api/model/*,
+  create_model). They are the same entity.
+caveat: >-
+  Attribute lists below are limited to fields evidenced by SDK method arguments
+  or documented behavior. Absence of a field here means it was not observed, not
+  that it does not exist.
+
+entities:
+  - name: Account
+    aka: Organization
+    description: The customer organization on the Lattica platform.
+    operations: [api/account/get_account_info, api/account/update_account_info]
+    attributes_observed: []
+    relationships:
+      - has_many: Workload
+        via: owner
+      - has_many: Token
+        via: issuer
+      - has_many: Worker
+        via: owner
+      - has_one: CreditBalance
+        via: account
+
+  - name: Workload
+    aka: Model
+    description: >-
+      A deployed AI model or database compiled into a homomorphic-ready pipeline
+      and made queryable under encryption.
+    operations:
+      - api/model/create_model
+      - api/model/get_model_info
+      - api/model/list_models
+      - api/model/update
+      - api/model/activate_model
+      - api/model/deactivate_model
+      - api/model/update_model_visibility
+      - api/model/get_model_upload_url
+      - api/files/upload_non_homomorphic_model
+    attributes_observed:
+      - model_id — identifier returned by create_model
+      - model_name — supplied at creation
+      - visibility — public/private, set via update_model_visibility
+      - active — toggled by activate_model / deactivate_model
+    relationships:
+      - belongs_to: Account
+        via: owner
+      - has_many: Token
+        via: assigned workload
+      - has_many: Query
+        via: target
+
+  - name: Token
+    aka: User Access Token
+    description: >-
+      A JWT granting one end user the right to submit encrypted queries to one
+      workload. Valid 30 days. Displayed once at creation and never stored by
+      the platform.
+    operations:
+      - api/token/list_tokens
+      - api/token/get_token_info
+      - api/token/update_token_info
+      - api/token/assign_token_to_model
+      - api/token/unassign_token_from_model
+      - api/token/delete_token
+      - api/token/get_pk_upload_url
+      - api/token/get_custom_data_upload_url
+    attributes_observed:
+      - token_id
+      - token_name
+      - status — active / cancelled
+      - assignment — the workload the token is bound to, may be null (unassigned)
+      - expiration — 30 days from creation
+    relationships:
+      - belongs_to: Account
+        via: issuer
+      - belongs_to: Workload
+        via: assignment
+        optional: true
+      - has_one: EvaluationKey
+        via: token
+
+  - name: Worker
+    description: >-
+      A GPU compute machine that executes homomorphic operations. Started and
+      stopped explicitly by the organization; queries run against active workers.
+    operations:
+      - api/worker/start_worker
+      - api/worker/stop_worker
+      - api/worker/poll_worker_status
+      - api/worker/get_active_workers
+      - api/worker/list_worker_sessions
+    attributes_observed:
+      - status — polled via poll_worker_status
+    relationships:
+      - belongs_to: Account
+        via: owner
+      - has_many: WorkerSession
+        via: worker
+
+  - name: WorkerSession
+    description: A discrete run of a worker, retained for usage and billing review.
+    operations: [api/worker/list_worker_sessions]
+    relationships:
+      - belongs_to: Worker
+        via: worker
+
+  - name: EvaluationKey
+    aka: EK / public key
+    description: >-
+      The public homomorphic evaluation key uploaded by the end user to
+      accelerate computation. Cannot decrypt. Paired with a secret key that
+      never leaves the client.
+    operations: [api/token/get_pk_upload_url]
+    relationships:
+      - belongs_to: Token
+        via: token
+
+  - name: CreditBalance
+    description: >-
+      Prepaid compute credits drawn down by query execution. A workload is only
+      queryable while the owning account holds credits.
+    operations: [api/finance/get_account_credits, api/finance/get_transaction_history]
+    relationships:
+      - belongs_to: Account
+        via: account
+      - has_many: Transaction
+        via: account
+
+  - name: Transaction
+    description: A payment or credit-purchase record in the account's history.
+    operations: [api/finance/get_transaction_history]
+    relationships:
+      - belongs_to: Account
+        via: account
+
+  - name: Query
+    description: >-
+      An encrypted request executed against a workload. Not a stored REST
+      resource — it is an execution against the /api/do_action pipeline,
+      carrying protobuf-serialized ciphertext in and out.
+    attributes_observed:
+      - serialized_ct — the input ciphertext
+      - serialized_ct_res — the result ciphertext
+    relationships:
+      - belongs_to: Workload
+        via: target
+      - belongs_to: Token
+        via: authorization
+
+id_prefixes:
+  documented: false
+  note: >-
+    Lattica publishes no object-reference page and the SDK reveals no id prefix
+    scheme, so none is claimed.
+render:
+  subway: null
+  note: No subway/ diagram exists in this repo yet.

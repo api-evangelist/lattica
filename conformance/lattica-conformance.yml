@@ -1,0 +1,119 @@
+generated: '2026-07-19'
+method: searched
+source: >-
+  https://platformdocs.lattica.ai/ (full docs index), the first-party SDK wheels
+  (lattica-common 0.8.2, lattica-management 0.2.1, lattica-query 1.5.0), and
+  https://www.lattica.ai/ (platform, fhe, heal, terms-of-use pages). No OpenAPI
+  definition is published, so conformance was assessed against the documented
+  behavior and the official client implementation.
+description: >-
+  Cross-cutting standards conformance for the Lattica platform API. The headline
+  finding: Lattica is a deep-cryptography company whose HTTP surface is
+  deliberately plain. It conforms to very few web-API standards — no OAuth, no
+  OIDC, no RFC 9457, no RFC 8594 — and publishes no compliance certifications.
+  That is a statement about maturity stage, not about cryptographic rigor.
+standards:
+  - id: tls
+    conforms: true
+    evidence: >-
+      All hosts (www.lattica.ai, platformdocs.lattica.ai, api.lattica.ai) serve
+      over HTTPS. See security/lattica-domain-security.yml for the probed TLS,
+      HSTS and DNS posture.
+  - id: bearer-token-auth
+    conforms: true
+    evidence: >-
+      RFC 6750-style bearer tokens — lattica_common/app_api.py sets
+      `Authorization: Bearer <token>` on every request. User access tokens are
+      JWTs.
+  - id: oauth2
+    conforms: false
+    evidence: >-
+      No authorization endpoint, no token endpoint, no grant flow. Tokens are
+      minted in the web console or via the management SDK and handed out
+      out-of-band.
+  - id: oidc
+    conforms: false
+    evidence: >-
+      No /.well-known/openid-configuration on any host (the marketing host
+      soft-404s all paths with HTTP 200; see well-known/lattica-well-known.yml).
+  - id: oauth-scopes
+    conforms: false
+    evidence: >-
+      No scope system. Authorization is structural — token class plus
+      token-to-workload binding. No scopes/ artifact produced.
+  - id: rfc9457
+    conforms: false
+    evidence: >-
+      Errors are a custom JSON envelope with `error` and `error_code` fields,
+      not application/problem+json.
+  - id: rfc8594
+    conforms: false
+    evidence: No Sunset or Deprecation header handling; no deprecation policy published.
+  - id: rest
+    conforms: false
+    evidence: >-
+      Not resource-oriented. The surface is RPC over HTTPS — POST to
+      /api/<domain>/<action> with a JSON body. No path parameters, no verb
+      semantics, no hypermedia.
+  - id: json:api
+    conforms: false
+    evidence: Custom JSON envelope; no JSON:API media type or document structure.
+  - id: pagination
+    conforms: false
+    evidence: >-
+      List actions accept no cursor, offset, limit or page parameter in the
+      official SDK; collections appear to return in full.
+  - id: idempotency
+    conforms: false
+    evidence: >-
+      No Idempotency-Key header or equivalent de-duplication key in the SDK or
+      the docs. Recorded as non-conforming for the standard specifically; see
+      conventions/lattica-conventions.yml, where it is recorded as
+      "not documented" rather than proven absent at the backend.
+  - id: grpc
+    conforms: false
+    evidence: >-
+      Protocol Buffers ARE used, but for ciphertext payload serialization over
+      HTTP (hom_op_pb2, generic_pb2 ship compiled in lattica-query) — not as a
+      gRPC service. No .proto source is published, so no grpc/ artifact exists.
+  - id: openapi
+    conforms: false
+    evidence: >-
+      No OpenAPI or Swagger definition published. /openapi.json on api.lattica.ai
+      returns 403, as does every other path on that host — indeterminate rather
+      than confirmed absent, but nothing is referenced from the docs.
+  - id: asyncapi
+    conforms: false
+    evidence: >-
+      No event, streaming, or webhook surface is documented anywhere in the
+      48-page docs index. Query execution is request/response. Not penalized —
+      there is genuinely no event surface to describe.
+  - id: webhooks
+    conforms: false
+    evidence: No webhook catalog, no callback registration, no event types documented.
+
+compliance_certifications:
+  published: false
+  searched:
+    - https://platformdocs.lattica.ai/ (full index)
+    - https://www.lattica.ai/ (platform, about, fhe, heal, terms-of-use)
+  findings: >-
+    No SOC 2, ISO 27001, PCI DSS, HIPAA, GDPR-attestation, or FedRAMP claim is
+    published on any Lattica surface. No trust center exists. Because there is
+    no published compliance program, NO `type: Compliance` pointer is emitted in
+    apis.yml — emitting one would misrepresent the provider.
+  note: >-
+    Worth distinguishing for readers: Lattica's privacy claim is architectural
+    (the server never sees plaintext) rather than certificational. The absence
+    of audit certifications is a real gap for regulated buyers, and is the most
+    obvious near-term addition for a company selling into healthcare and finance
+    use cases.
+
+cryptographic_basis:
+  note: >-
+    Recorded as context, not as a standards claim. Lattica implements Fully
+    Homomorphic Encryption (CKKS is referenced by an is_ckks flag in the SDK)
+    and publishes a technical whitepaper at
+    https://www.lattica.ai/assets/docs/lattica-fhe-technical-whitepaper.pdf.
+    The open-source FHE core is at https://github.com/Lattica-ai/lattica_fhe_core.
+    No third-party cryptographic audit is published.

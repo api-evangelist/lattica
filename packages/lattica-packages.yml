@@ -1,0 +1,121 @@
+generated: '2026-07-19'
+method: searched
+source: >-
+  https://platformdocs.lattica.ai/how-to-guides/client-installation.md (install
+  instructions for the Query Client and Management Client), verified against the
+  PyPI JSON API (https://pypi.org/pypi/<name>/json) and the npm registry
+  (https://registry.npmjs.org). Registry HTTP status recorded at fetch time.
+description: >-
+  First-party LatticaAI client libraries. The docs publish two install paths — a
+  Python SDK (pip) and a TypeScript SDK (npm). Ownership was confirmed via the
+  PyPI author_email field ("LatticaAI Inc." <support@lattica.ai> /
+  <hello@lattica.ai>) and the @lattica-ai npm scope. IMPORTANT: the unscoped
+  PyPI project `lattica` is an UNRELATED third-party P2P/DHT networking library
+  and is explicitly recorded below as not official, so a later round does not
+  mistake it for a Lattica SDK.
+packages:
+  - language: python
+    registry: pypi
+    name: lattica-query
+    version: '1.5.0'
+    url: https://pypi.org/project/lattica-query/
+    install: pip install lattica-query
+    summary: Client package for running inference queries on the LatticaAI platform.
+    author_email: support@lattica.ai
+    requires_python: '>=3.11'
+    role: >-
+      Query Client — end-user SDK. Generates the secret/evaluation key pair,
+      encrypts input on-device, submits the encrypted query, and decrypts the
+      result locally.
+    docs: https://platformdocs.lattica.ai/how-to-guides/client-installation/how-to-install-query-client.md
+    status: 200
+    official: true
+  - language: python
+    registry: pypi
+    name: lattica-management
+    version: '0.2.1'
+    url: https://pypi.org/project/lattica-management/
+    install: pip install lattica-management
+    summary: Lattica management client.
+    author_email: hello@lattica.ai
+    role: >-
+      Management Client — organization-admin SDK. Manages workloads (models),
+      user access tokens, compute workers, and account/finance operations.
+    docs: https://platformdocs.lattica.ai/how-to-guides/client-installation/how-to-install-management-client.md
+    status: 200
+    official: true
+  - language: python
+    registry: pypi
+    name: lattica-common
+    version: '0.8.2'
+    url: https://pypi.org/project/lattica-common/
+    install: pip install lattica-common
+    summary: Common functions for Lattica clients.
+    author_email: hello@lattica.ai
+    role: >-
+      Shared transport layer used by both clients — HTTP settings, the
+      Bearer-token HTTP client, file upload helpers, and the app_api surface.
+      Pulled in as a dependency rather than installed directly.
+    status: 200
+    official: true
+  - language: typescript
+    registry: npm
+    name: "@lattica-ai/query"
+    version: '2.1.0'
+    url: https://www.npmjs.com/package/@lattica-ai/query
+    install: npm install @lattica-ai/query
+    summary: A client for lattica image queries.
+    role: >-
+      TypeScript Query Client for web environments — uploads the evaluation key,
+      encrypts input in the browser, and applies the encrypted query.
+    docs: https://platformdocs.lattica.ai/how-to-guides/client-installation/how-to-install-query-client.md
+    status: 200
+    official: true
+    notes: >-
+      The docs render the install as `npm install @Lattica-ai/query`; npm scopes
+      are lower-cased, and only `@lattica-ai/query` resolves in the registry.
+not_official:
+  - language: python
+    registry: pypi
+    name: lattica
+    url: https://pypi.org/project/lattica/
+    summary: A unified Python SDK for P2P networking with integrated DHT and NAT capabilities.
+    official: false
+    reason: >-
+      Name collision only. This project is a peer-to-peer networking SDK with no
+      relationship to LatticaAI — no FHE surface, different maintainer, MIT
+      license, and no reference to lattica.ai. Do not wire it as a Lattica SDK.
+registries_checked:
+  - registry: pypi
+    endpoint: https://pypi.org/pypi/<name>/json
+    found: [lattica-query, lattica-management, lattica-common]
+    not_found: [lattica-sdk, lattica-client, lattica-deployer]
+  - registry: npm
+    endpoint: https://registry.npmjs.org/<name>
+    found: ["@lattica-ai/query"]
+    not_found: [lattica, lattica-ai, "@lattica/sdk", "@lattica-ai/management"]
+  - registry: rubygems
+    endpoint: https://rubygems.org/api/v1/gems/<name>.json
+    found: []
+    not_found: [lattica, lattica-query]
+  - registry: crates.io
+    endpoint: https://crates.io/api/v1/crates/<name>
+    found: []
+    not_found: [lattica, lattica-query]
+  - registry: nuget
+    endpoint: https://azuresearch-usnc.nuget.org/query?q=packageid:<name>
+    found: []
+    not_found: [lattica, lattica.query]
+  - registry: packagist
+    endpoint: https://repo.packagist.org/p2/lattica/query.json
+    found: []
+  - registry: maven-central
+    endpoint: https://search.maven.org/solrsearch/select?q=lattica
+    found: []
+    unrelated_hit: >-
+      com.lattica.oss:vernum — the only "lattica" match in Maven Central. Not
+      claimed as a LatticaAI artifact: no FHE surface and no link to lattica.ai.
+      Treated as a name collision pending evidence.
+  - registry: pkg.go.dev
+    checked: false
+    reason: No Go client is referenced anywhere in the Lattica docs or GitHub org.

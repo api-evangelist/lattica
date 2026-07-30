@@ -1,0 +1,51 @@
+# LatticaAI Documentation
+
+## LatticaAI Documentation
+
+- [Welcome to LatticaAI](https://platformdocs.lattica.ai/welcome-to-latticaai.md)
+- [Conceptual Guide](https://platformdocs.lattica.ai/conceptual-guide.md): This page provides an overview of how our system operates, the roles of each actor, and the process required for setup and ongoing use.
+- [Pricing](https://platformdocs.lattica.ai/conceptual-guide/pricing.md): Usage-based pricing for Lattica's compute services.
+- [Architecture Overview](https://platformdocs.lattica.ai/architecture-overview.md)
+- [Management Client](https://platformdocs.lattica.ai/architecture-overview/management-client.md)
+- [Query Client](https://platformdocs.lattica.ai/architecture-overview/query-client.md)
+- [Platform Workflows](https://platformdocs.lattica.ai/platform-workflows.md)
+- [Account Management](https://platformdocs.lattica.ai/platform-workflows/account-management.md): Account Management is the starting point for accessing and managing all features of the LatticaAI platform.
+- [Workload Management](https://platformdocs.lattica.ai/platform-workflows/workload-management.md): Workload Management allows providers to securely deploy and manage their Privacy-preserving workloads on the LatticaAI platform.
+- [User Access Management](https://platformdocs.lattica.ai/platform-workflows/user-access-management.md)
+- [Query Submission](https://platformdocs.lattica.ai/platform-workflows/query-submission.md): End-users interact with Workloads on LatticaAI by submitting queries through the Query Client. This document provides an overview of the steps required to submit queries.
+- [Credit Management](https://platformdocs.lattica.ai/platform-workflows/credit-management.md)
+- [Worker Management](https://platformdocs.lattica.ai/platform-workflows/worker-management.md): This workflow provides a high-level overview of managing workers, including running, monitoring, and stopping them.
+- [How-To Guides](https://platformdocs.lattica.ai/how-to-guides.md)
+- [Client Installation](https://platformdocs.lattica.ai/how-to-guides/client-installation.md)
+- [How-To: Install Management Client](https://platformdocs.lattica.ai/how-to-guides/client-installation/how-to-install-management-client.md)
+- [How-To: Install Query Client](https://platformdocs.lattica.ai/how-to-guides/client-installation/how-to-install-query-client.md)
+- [Workload Lifecycle](https://platformdocs.lattica.ai/how-to-guides/workload-lifecycle.md)
+- [How-To: Deploy Workload](https://platformdocs.lattica.ai/how-to-guides/workload-lifecycle/how-to-deploy-workload.md): Deploying an AI model to LatticaAI involves consultation, registration, submission, and homomorhic-ready model preparation. This guide walks you through the process.
+- [How-To: Modify Workload Settings](https://platformdocs.lattica.ai/how-to-guides/workload-lifecycle/how-to-modify-workload-settings.md)
+- [Access Control](https://platformdocs.lattica.ai/how-to-guides/access-control.md)
+- [How-To: Create User Access Token](https://platformdocs.lattica.ai/how-to-guides/access-control/how-to-create-user-access-token.md): This guide explains how to create a User Access Token using two methods: the Web Console and the Python  SDK.
+- [How-To: Modify User Access Token Setting](https://platformdocs.lattica.ai/how-to-guides/access-control/how-to-modify-user-access-token-setting.md)
+- [How-To: Remove Token's Assignment](https://platformdocs.lattica.ai/how-to-guides/access-control/how-to-remove-tokens-assignment.md)
+- [How-To: Assign Token to Workload](https://platformdocs.lattica.ai/how-to-guides/access-control/how-to-assign-token-to-workload.md)
+- [How-To: See List of Tokens](https://platformdocs.lattica.ai/how-to-guides/access-control/how-to-see-list-of-tokens.md)
+- [Resource Management](https://platformdocs.lattica.ai/how-to-guides/resource-management.md)
+- [How-To: Start Worker](https://platformdocs.lattica.ai/how-to-guides/resource-management/how-to-start-worker.md)
+- [How-To: Stop Worker](https://platformdocs.lattica.ai/how-to-guides/resource-management/how-to-stop-worker.md)
+- [How-To: Monitor Worker Performance](https://platformdocs.lattica.ai/how-to-guides/resource-management/how-to-monitor-worker-performance.md)
+- [Secure Query Processing](https://platformdocs.lattica.ai/how-to-guides/secure-query-processing.md)
+- [How To: Upload Evaluation Key](https://platformdocs.lattica.ai/how-to-guides/secure-query-processing/how-to-upload-evaluation-key.md)
+- [How-To: Encrypt Input Message](https://platformdocs.lattica.ai/how-to-guides/secure-query-processing/how-to-encrypt-input-message.md)
+- [How To: Execute Query](https://platformdocs.lattica.ai/how-to-guides/secure-query-processing/how-to-execute-query.md): Executing a query allows an end-user to interact securely with an workload on the LatticaAI platform. This guide explains how to submit an encrypted query using the Query Client.
+- [How-To: Decrypt Output Data](https://platformdocs.lattica.ai/how-to-guides/secure-query-processing/how-to-decrypt-output-data.md): After receiving the encrypted output from a query request, the end-user must decrypt the message using their Secret Key. This guide explains how to perform the decryption process.
+- [How-To: Encrypt, Execute, and Decrypt in One Step](https://platformdocs.lattica.ai/how-to-guides/secure-query-processing/how-to-encrypt-execute-and-decrypt-in-one-step.md)
+- [Account and Finance Operations](https://platformdocs.lattica.ai/how-to-guides/account-and-finance-operations.md)
+- [How-To: View Payment Transaction History](https://platformdocs.lattica.ai/how-to-guides/account-and-finance-operations/how-to-view-payment-transaction-history.md)
+- [How-To: Update Account Information](https://platformdocs.lattica.ai/how-to-guides/account-and-finance-operations/how-to-update-account-information.md)
+- [How-To: View Credit Balance and Add Credit to Your Account](https://platformdocs.lattica.ai/how-to-guides/account-and-finance-operations/how-to-view-credit-balance-and-add-credit-to-your-account.md)
+- [How-To: Monitor Balance and Usage](https://platformdocs.lattica.ai/how-to-guides/account-and-finance-operations/how-to-monitor-balance-and-usage.md)
+- [Demo Tutorials](https://platformdocs.lattica.ai/demo-tutorials.md)
+- [Image Sharpening with LatticaAI Demo Tutorial](https://platformdocs.lattica.ai/demo-tutorials/image-sharpening-with-latticaai-demo-tutorial.md)
+- [Sentiment Analysis with LatticaAI Demo Tutorial](https://platformdocs.lattica.ai/demo-tutorials/sentiment-analysis-with-latticaai-demo-tutorial.md)
+- [Health Analysis with LatticaAI Demo Tutorial](https://platformdocs.lattica.ai/demo-tutorials/health-analysis-with-latticaai-demo-tutorial.md)
+- [Digit Recognition with LatticaAI Demo Tutorial](https://platformdocs.lattica.ai/demo-tutorials/digit-recognition-with-latticaai-demo-tutorial.md)
+- [Zooming Into Each Step of Demo Run with LatticaAI flow](https://platformdocs.lattica.ai/demo-tutorials/zooming-into-each-step-of-demo-run-with-latticaai-flow.md)

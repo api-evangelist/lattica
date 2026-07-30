@@ -1,0 +1,137 @@
+generated: '2026-07-19'
+method: derived
+source: >-
+  Derived from the first-party SDK wheels published by LatticaAI Inc. —
+  lattica-common 0.8.2 (lattica_common/http_settings.py, app_api.py),
+  lattica-management 0.2.1, lattica-query 1.5.0 — cross-read against
+  https://platformdocs.lattica.ai/. Lattica publishes no OpenAPI definition and
+  no REST-conventions page, so the cross-cutting behavior below was read out of
+  the official client code and the how-to guides. Anything the SDKs do not
+  evidence is recorded as "not documented" rather than guessed.
+description: >-
+  How the Lattica platform API behaves across every call. The shape is unusual
+  and worth stating plainly: this is NOT a resource-oriented REST API. It is an
+  RPC-over-HTTPS surface where every call is a POST to a named action path, with
+  a JSON body, returning JSON. There are no path parameters, no HTTP verbs
+  beyond POST, and no hypermedia.
+
+base_url: https://api.lattica.ai
+base_url_override:
+  env: LATTICA_BE_URL
+  note: >-
+    The SDKs read LATTICA_BE_URL to repoint the client at a non-production
+    backend. Evidence of a staging/self-hosted deployment path, though Lattica
+    documents no public sandbox.
+api_style: >-
+  RPC over HTTPS. POST to /api/<domain>/<action>, JSON request body, JSON
+  response. A second root, /api/do_action, is configured in the SDK as
+  do_action_base_url for the homomorphic execution path.
+content_types:
+  request: application/json (application/octet-stream for binary uploads)
+  response: application/json
+
+authentication:
+  scheme: Bearer token in the Authorization header
+  classes: [management license, user access token (JWT, 30-day)]
+  detail: authentication/lattica-authentication.yml
+  docs: https://platformdocs.lattica.ai/architecture-overview/query-client.md
+
+idempotency:
+  supported: not_documented
+  mechanism: null
+  evidence: >-
+    No Idempotency-Key header, no client-generated request key, and no retry
+    de-duplication appears anywhere in lattica-common's HTTP client or in the
+    platform documentation. Recorded as NOT DOCUMENTED rather than false —
+    absence of evidence in the SDK is not proof the backend lacks it.
+  consequence: >-
+    Callers should treat mutating actions (create_model, generate_query_token,
+    start_worker) as non-idempotent and guard retries themselves.
+
+pagination:
+  supported: not_documented
+  evidence: >-
+    List actions (list_models, list_tokens, list_worker_sessions,
+    get_active_workers) take no cursor, offset, limit, or page parameter in the
+    management SDK, and no pagination envelope is parsed from the response.
+    Collections appear to return in full.
+
+versioning:
+  scheme: client-library versioning
+  mechanism: >-
+    No API version in the URL path and no version request header. The SDK sends
+    a client_info body field carrying client_module, client_version, and the
+    module name, and the backend can reject an outdated client — app_api.py
+    raises a version error carrying a min_version, prompting an SDK upgrade.
+  implication: >-
+    Compatibility is negotiated server-to-client by minimum SDK version rather
+    than by a pinned API version. Upgrading the platform can require upgrading
+    the client.
+  docs_version_label: 'Platform Docs · v2.4 (https://www.lattica.ai/documentation.html)'
+
+error_envelope:
+  format: custom-json
+  rfc9457: false
+  fields:
+    - error — human-readable message
+    - error_code — machine-readable code
+    - min_version — present on outdated-client errors
+  evidence: lattica_common/app_api.py parses 'error' and 'error_code' from the response body.
+  catalog: >-
+    Lattica publishes no error reference and the SDK enumerates no code values,
+    so no errors/ catalog was produced. Emitting one would require inventing
+    codes.
+
+rate_limiting:
+  documented: false
+  headers: none observed
+  note: >-
+    No rate-limit headers are read by the SDK and no limits are published.
+    Capacity is instead governed commercially and structurally — see metering.
+
+metering:
+  model: >-
+    Credit-based. Workload providers purchase credits to make a workload
+    queryable; consumption is tracked per query. This, not a request-rate limit,
+    is the effective throttle.
+  actions: [api/finance/get_account_credits, api/finance/get_transaction_history]
+  docs: https://platformdocs.lattica.ai/platform-workflows/credit-management.md
+
+compute_model:
+  note: >-
+    Unlike a typical SaaS API, capacity is explicitly provisioned by the caller.
+    Workers (GPU compute machines) are started and stopped by the organization
+    admin, and queries execute against running workers.
+  actions: [api/worker/start_worker, api/worker/stop_worker, api/worker/poll_worker_status]
+  docs: https://platformdocs.lattica.ai/platform-workflows/worker-management.md
+
+file_transfer:
+  pattern: >-
+    Large artifacts (models, public keys, custom data) are not posted inline.
+    The client requests a pre-signed upload URL, PUTs the bytes directly, then
+    notifies the platform that the upload finished.
+  actions:
+    - api/model/get_model_upload_url
+    - api/token/get_pk_upload_url
+    - api/token/get_custom_data_upload_url
+    - api/files/upload_complete
+
+serialization:
+  wire_format: >-
+    Ciphertext and homomorphic operation sequences are Protocol Buffers, not
+    JSON — lattica_query/serialization ships compiled descriptors (hom_op_pb2,
+    generic_pb2) and serializes to bytes for transport.
+  note: >-
+    No .proto source is published by Lattica (the wheels ship only generated
+    _pb2 modules), so no grpc/ artifact was created. This is a protobuf-encoded
+    payload over HTTP, not a gRPC service.
+
+request_tracing:
+  request_id: not_documented
+  note: No request-id or correlation header is set or read by the SDK.
+
+cross_links:
+  authentication: authentication/lattica-authentication.yml
+  lifecycle: lifecycle/lattica-lifecycle.yml
+  data_model: data-model/lattica-data-model.yml
+  packages: packages/lattica-packages.yml

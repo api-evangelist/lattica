@@ -1,0 +1,94 @@
+generated: '2026-07-19'
+method: searched
+description: >-
+  Results of probing the /.well-known/ discovery surface for every Lattica host
+  in apis.yml. NOTHING WAS FOUND — and the raw status codes are misleading, so
+  the method matters here. The marketing site (lattica.ai / www.lattica.ai)
+  answers HTTP 200 to EVERY path, including nonsense ones, returning a
+  1,183-byte HTML stub that meta-refreshes to platform.html. A control request
+  for /nonsense-xyz123 returned the identical 200 + identical body, which proves
+  these are soft 404s, not real documents. No well-known document was saved,
+  because none exists. The docs host (platformdocs.lattica.ai) does return real
+  404s and genuinely serves no well-known documents. The API host
+  (api.lattica.ai) is behind a gate that answers 403 to every unauthenticated
+  path, so its well-known surface is indeterminate rather than absent.
+soft_404_control:
+  host: https://www.lattica.ai
+  control_path: /nonsense-xyz123.html
+  control_status: 200
+  control_bytes: 1183
+  real_page_bytes_example: 23308  # /about.html
+  conclusion: >-
+    Status code alone is not evidence of presence on this host. Presence was
+    judged by body content and byte length, not by the 200.
+hosts:
+  - host: https://www.lattica.ai
+    resolves_real_404: false
+    documents:
+      - path: /.well-known/security.txt
+        status: 200
+        real: false
+        note: Soft 404 — served the landing-page stub, not a security.txt.
+      - path: /.well-known/openid-configuration
+        status: 200
+        real: false
+        note: Soft 404 — HTML stub, not JSON.
+      - path: /.well-known/oauth-authorization-server
+        status: 200
+        real: false
+        note: Soft 404 — HTML stub, not JSON.
+      - path: /.well-known/api-catalog
+        status: 200
+        real: false
+        note: Soft 404 — HTML stub.
+      - path: /.well-known/ai-plugin.json
+        status: 200
+        real: false
+        note: Soft 404 — HTML stub, not JSON.
+      - path: /llms.txt
+        status: 200
+        real: false
+        note: >-
+          Soft 404 on this host. A REAL llms.txt exists on the docs host and is
+          saved at llms/lattica-llms.txt.
+      - path: /robots.txt
+        status: 200
+        real: false
+        note: Soft 404 — HTML stub, not a robots.txt.
+  - host: https://platformdocs.lattica.ai
+    resolves_real_404: true
+    documents:
+      - path: /nonsense-xyz123.txt
+        status: 404
+        real: false
+        note: Control request — this host returns honest 404s.
+      - path: /llms.txt
+        status: 200
+        real: true
+        type: text/plain
+        file: ../llms/lattica-llms.txt
+        note: >-
+          Real, complete documentation index (7,003 bytes, 48 entries). Saved
+          verbatim. Wired as type LLMsTxt.
+  - host: https://api.lattica.ai
+    resolves_real_404: false
+    note: >-
+      Every path returns 403 to an unauthenticated client, including / and all
+      well-known paths. This is an access gate, not a 404 — presence of any
+      well-known document cannot be determined without credentials.
+    documents:
+      - path: /.well-known/security.txt
+        status: 403
+        real: indeterminate
+      - path: /openapi.json
+        status: 403
+        real: indeterminate
+      - path: /docs
+        status: 403
+        real: indeterminate
+security_txt:
+  found: false
+  note: >-
+    No /.well-known/security.txt on any reachable Lattica host. The only
+    published security contact is the general contact form at
+    https://www.lattica.ai/contact.html and the address hello@lattica.ai.
