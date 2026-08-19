@@ -1,118 +1,118 @@
 generated: '2026-07-19'
 method: derived
 status: candidate
-source: >-
-  Derived from the action paths hard-coded in the first-party LatticaAI SDK
-  wheels (lattica-management 0.2.1, lattica-query 1.5.0, lattica-common 0.8.2)
-  fetched from PyPI, cross-read against https://platformdocs.lattica.ai/.
-description: >-
-  Lattica operates NO official MCP server. A search of the docs, the
-  Lattica-ai GitHub organization, and the npm/PyPI namespaces found no hosted
-  remote MCP endpoint, no stdio server package, and no mcp.json. The tool list
-  below is a CANDIDATE proposal only — an API Evangelist derivation showing what
-  an MCP server over the Lattica platform API would expose. It is not published
-  by Lattica and must not be presented as such.
+source: Derived from the action paths hard-coded in the first-party LatticaAI SDK wheels (lattica-management
+  0.2.1, lattica-query 1.5.0, lattica-common 0.8.2) fetched from PyPI, cross-read against https://platformdocs.lattica.ai/.
+description: Lattica operates NO official MCP server. A search of the docs, the Lattica-ai GitHub organization,
+  and the npm/PyPI namespaces found no hosted remote MCP endpoint, no stdio server package, and no mcp.json.
+  The tool list below is a CANDIDATE proposal only — an API Evangelist derivation showing what an MCP
+  server over the Lattica platform API would expose. It is not published by Lattica and must not be presented
+  as such.
 official_server:
   exists: false
   searched:
-    - https://platformdocs.lattica.ai/ (full llms.txt index, 48 pages — no MCP page)
-    - https://github.com/Lattica-ai (6 public repos — no MCP server)
-    - npm @lattica-ai scope (only @lattica-ai/query)
-    - PyPI (lattica-query, lattica-management, lattica-common — no MCP entry point)
+  - https://platformdocs.lattica.ai/ (full llms.txt index, 48 pages — no MCP page)
+  - https://github.com/Lattica-ai (6 public repos — no MCP server)
+  - npm @lattica-ai scope (only @lattica-ai/query)
+  - PyPI (lattica-query, lattica-management, lattica-common — no MCP entry point)
 candidate:
   transport: stdio
-  auth: >-
-    Bearer token. Two classes, and they should NOT share one server: the
-    management license unlocks the admin tools, while a user access token only
-    permits the query tools against its single assigned workload.
+  auth: 'Bearer token. Two classes, and they should NOT share one server: the management license unlocks
+    the admin tools, while a user access token only permits the query tools against its single assigned
+    workload.'
   base_url: https://api.lattica.ai
-  design_note: >-
-    The encrypted-query flow is a poor fit for a naive MCP tool. The secret key
-    must never leave the user's machine, so encrypt/decrypt have to run locally
-    in the client; only the ciphertext-in/ciphertext-out step is a remote call.
-    An MCP server that accepted plaintext and encrypted it server-side would
-    defeat the entire product.
+  design_note: The encrypted-query flow is a poor fit for a naive MCP tool. The secret key must never
+    leave the user's machine, so encrypt/decrypt have to run locally in the client; only the ciphertext-in/ciphertext-out
+    step is a remote call. An MCP server that accepted plaintext and encrypted it server-side would defeat
+    the entire product.
   tools:
-    - name: list_workloads
-      description: List the workloads (models) registered to the organization.
-      action: api/model/list_models
-      auth: management
-    - name: get_workload
-      description: Get metadata and status for a single workload.
-      action: api/model/get_model_info
-      auth: management
-    - name: create_workload
-      description: Register a new workload (model) on the platform.
-      action: api/model/create_model
-      auth: management
-    - name: activate_workload
-      description: Activate a workload so it can serve encrypted queries.
-      action: api/model/activate_model
-      auth: management
-    - name: deactivate_workload
-      description: Deactivate a workload and stop it serving queries.
-      action: api/model/deactivate_model
-      auth: management
-    - name: set_workload_visibility
-      description: Change whether a workload is public or private.
-      action: api/model/update_model_visibility
-      auth: management
-    - name: list_tokens
-      description: List user access tokens issued by the organization.
-      action: api/token/list_tokens
-      auth: management
-    - name: get_token
-      description: Get the details, assignment, and status of one access token.
-      action: api/token/get_token_info
-      auth: management
-    - name: assign_token_to_workload
-      description: Bind an unassigned access token to a specific workload.
-      action: api/token/assign_token_to_model
-      auth: management
-    - name: unassign_token
-      description: Remove a token's workload assignment.
-      action: api/token/unassign_token_from_model
-      auth: management
-    - name: delete_token
-      description: Revoke and delete a user access token.
-      action: api/token/delete_token
-      auth: management
-    - name: list_workers
-      description: List currently active GPU compute workers.
-      action: api/worker/get_active_workers
-      auth: management
-    - name: start_worker
-      description: Start a compute worker so workloads can execute queries.
-      action: api/worker/start_worker
-      auth: management
-    - name: stop_worker
-      description: Stop a running compute worker.
-      action: api/worker/stop_worker
-      auth: management
-    - name: get_worker_status
-      description: Poll the status of a compute worker.
-      action: api/worker/poll_worker_status
-      auth: management
-    - name: list_worker_sessions
-      description: List historical worker sessions for usage review.
-      action: api/worker/list_worker_sessions
-      auth: management
-    - name: get_account
-      description: Retrieve organization account information.
-      action: api/account/get_account_info
-      auth: management
-    - name: get_credit_balance
-      description: Read the account's remaining compute credit balance.
-      action: api/finance/get_account_credits
-      auth: management
-    - name: get_transaction_history
-      description: List payment and credit transactions for the account.
-      action: api/finance/get_transaction_history
-      auth: management
+  - name: list_workloads
+    description: List the workloads (models) registered to the organization.
+    action: api/model/list_models
+    auth: management
+  - name: get_workload
+    description: Get metadata and status for a single workload.
+    action: api/model/get_model_info
+    auth: management
+  - name: create_workload
+    description: Register a new workload (model) on the platform.
+    action: api/model/create_model
+    auth: management
+  - name: activate_workload
+    description: Activate a workload so it can serve encrypted queries.
+    action: api/model/activate_model
+    auth: management
+  - name: deactivate_workload
+    description: Deactivate a workload and stop it serving queries.
+    action: api/model/deactivate_model
+    auth: management
+  - name: set_workload_visibility
+    description: Change whether a workload is public or private.
+    action: api/model/update_model_visibility
+    auth: management
+  - name: list_tokens
+    description: List user access tokens issued by the organization.
+    action: api/token/list_tokens
+    auth: management
+  - name: get_token
+    description: Get the details, assignment, and status of one access token.
+    action: api/token/get_token_info
+    auth: management
+  - name: assign_token_to_workload
+    description: Bind an unassigned access token to a specific workload.
+    action: api/token/assign_token_to_model
+    auth: management
+  - name: unassign_token
+    description: Remove a token's workload assignment.
+    action: api/token/unassign_token_from_model
+    auth: management
+  - name: delete_token
+    description: Revoke and delete a user access token.
+    action: api/token/delete_token
+    auth: management
+  - name: list_workers
+    description: List currently active GPU compute workers.
+    action: api/worker/get_active_workers
+    auth: management
+  - name: start_worker
+    description: Start a compute worker so workloads can execute queries.
+    action: api/worker/start_worker
+    auth: management
+  - name: stop_worker
+    description: Stop a running compute worker.
+    action: api/worker/stop_worker
+    auth: management
+  - name: get_worker_status
+    description: Poll the status of a compute worker.
+    action: api/worker/poll_worker_status
+    auth: management
+  - name: list_worker_sessions
+    description: List historical worker sessions for usage review.
+    action: api/worker/list_worker_sessions
+    auth: management
+  - name: get_account
+    description: Retrieve organization account information.
+    action: api/account/get_account_info
+    auth: management
+  - name: get_credit_balance
+    description: Read the account's remaining compute credit balance.
+    action: api/finance/get_account_credits
+    auth: management
+  - name: get_transaction_history
+    description: List payment and credit transactions for the account.
+    action: api/finance/get_transaction_history
+    auth: management
   excluded_from_candidate:
-    - reason: >-
-        Client-side cryptographic operations — key generation, encryption, and
-        decryption run in the user's environment against the locally held secret
-        key. Exposing them as remote MCP tools would break the zero-plaintext
-        guarantee.
-      operations: [encrypt, decrypt, query_offline_phase, key generation]
+  - reason: Client-side cryptographic operations — key generation, encryption, and decryption run in the
+      user's environment against the locally held secret key. Exposing them as remote MCP tools would
+      break the zero-plaintext guarantee.
+    operations:
+    - encrypt
+    - decrypt
+    - query_offline_phase
+    - key generation
+deployment:
+  mode: none
+  verified: derived
+  checked: '2026-08-12'
+  source: catalog MCP census
