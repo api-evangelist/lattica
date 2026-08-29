@@ -9,6 +9,17 @@ description: 'LatticaAI is an Israeli privacy-technology company building Fully 
   Client that encrypts input on-device and decrypts results locally, so the server only
   ever sees ciphertext. HEAL (Homomorphic Encryption Abstraction Layer) bridges the FHE
   software stack to acceleration hardware.'
+deliveryModel:
+  model: saas
+  open_source: false
+  commercial: true
+  callable_host: false
+  label: Hosted service · you call their endpoint
+  confidence: medium
+  source:
+  - pricing
+  generated: '2026-08-28'
+  method: derived
 accessModel:
   pricing: unknown
   onboarding: self-serve
